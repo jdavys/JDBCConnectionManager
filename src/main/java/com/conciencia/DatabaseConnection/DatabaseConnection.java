@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JDBC Connetcion Manager to comunicate to specified DataBase.
@@ -38,6 +40,8 @@ public class DatabaseConnection {
     /** DB NAME */
     private static String DB_NAME;
     
+    public static Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
+    
     /**
      * Private constructor.
      */
@@ -56,6 +60,8 @@ public class DatabaseConnection {
         
         Properties info = new Properties();
         
+        logger.debug("Getting connection for user {0} and password {1}", user, password);
+        
         info.put("user", user);
         info.putIfAbsent("password", password);
         
@@ -70,6 +76,7 @@ public class DatabaseConnection {
      * @see JDBCDriver
      */
     public static void setJDBC_DRIVER(JDBCDriver JDBC_DRIVER) {
+        logger.debug("Setting JDBC DRIVER");
         DatabaseConnection.JDBC_DRIVER = JDBC_DRIVER;
     }
 
@@ -78,6 +85,7 @@ public class DatabaseConnection {
      * @param HOST the host
      */
     public static void setHOST(String HOST) {
+        logger.debug("Setting HOST");
         DatabaseConnection.HOST = HOST;
     }
 
@@ -86,6 +94,7 @@ public class DatabaseConnection {
      * @param PORT the port number
      */
     public static void setPORT(String PORT) {
+        logger.debug("Setting PORT");
         DatabaseConnection.PORT = PORT;
     }
 
@@ -94,6 +103,7 @@ public class DatabaseConnection {
      * @param DB_NAME the database name.
      */
     public static void setDB_NAME(String DB_NAME) {
+        logger.debug("Setting BD NAME");
         DatabaseConnection.DB_NAME = DB_NAME;
     }
     
@@ -103,6 +113,8 @@ public class DatabaseConnection {
      */
     private static String getBDURL(){
         String url="";
+        
+        logger.debug("Constructing DB URL");
         
         if(JDBC_DRIVER.getRDBMS().equalsIgnoreCase("mysql")){
             System.out.println("Using mysql");
@@ -126,6 +138,8 @@ public class DatabaseConnection {
     public static Connection getConnection(Properties info){
         Connection conn = null;
         
+        logger.debug("Creating connection");
+        
         try{
             //Loads driver Class in memory
             Class.forName(JDBC_DRIVER.getJDBCDriver());
@@ -148,6 +162,7 @@ public class DatabaseConnection {
      * @param conn Connection to be closed.
      */
     public static void closeConnection(Connection conn){
+        logger.debug("Closing Connection");
         try{
             conn.close();
         }
